@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RandomImgur</string>
+    <string name="gerar_imagem">Gerar imagem</string>
+    <string name="imagem_gerada">Imagem gerada</string>
+</resources>
