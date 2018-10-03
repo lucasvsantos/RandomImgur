@@ -28,21 +28,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void download(View view) {
+    public void generateImage(View view) {
         DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask();
 
         int r;
         String t = "http://i.imgur.com/";
-//        String t = "i.imgur.com/";
 
         for (int i = 0; i < 5; i++) {
             Double n = Math.floor(Math.random() * charAll.length());
             r = n.intValue();
             t += charAll.charAt(r);
         }
-
-//        downloadAsyncTask.execute("http://maxippoi.s365.xrea.com/imgurproxy.php/"+t+".jpg");
+        
         downloadAsyncTask.execute(t + ".jpg");
+    }
+
+    public void download(View view) {
     }
 
     class DownloadAsyncTask extends AsyncTask<String, Void, Bitmap> {
