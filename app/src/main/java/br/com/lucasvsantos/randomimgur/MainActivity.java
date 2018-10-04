@@ -1,12 +1,16 @@
 package br.com.lucasvsantos.randomimgur;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,13 +49,12 @@ public class MainActivity extends AppCompatActivity {
         DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask();
 
         int r;
-        String t = "http://i.imgur.com/";
-//        String t = "http://i.imgur.com/UHIIH.jpg";
+        StringBuilder t = new StringBuilder("http://i.imgur.com/");
 
         for (int i = 0; i < 5; i++) {
             Double n = Math.floor(Math.random() * charAll.length());
             r = n.intValue();
-            t += charAll.charAt(r);
+            t.append(charAll.charAt(r));
         }
 
         downloadAsyncTask.execute(t + ".jpg");
@@ -59,22 +62,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveImage(Context context, Bitmap b, String imageName) {
         FileOutputStream foStream;
+//        File file = new File(Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_DOWNLOADS), imageName);
         try {
             foStream = context.openFileOutput(imageName, Context.MODE_PRIVATE);
+//            foStream = new FileOutputStream(file);
             b.compress(Bitmap.CompressFormat.PNG, 100, foStream);
+
             foStream.close();
+            Toast.makeText(context, "Imagem salva em: " + getFilesDir().getAbsolutePath(), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(context, "Não foi possível salvar a imagem!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Não foi possível salvar a imagem!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
 
     public void download(View view) {
-        String fileName = String.valueOf("Arthur " + Calendar.getInstance().getTimeInMillis() + ".jpg");
-
+        String fileName = String.valueOf("IMG_" + Calendar.getInstance().getTimeInMillis() + ".png");
         saveImage(getBaseContext(), imagem, fileName);
-
-        Toast.makeText(this, "Imagem salva!", Toast.LENGTH_LONG).show();
     }
 
     class DownloadAsyncTask extends AsyncTask<String, Void, Bitmap> {
