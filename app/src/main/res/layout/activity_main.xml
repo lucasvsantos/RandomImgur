@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:onClick="generateImage"
+            android:id="@+id/button"
             android:background="#F452FA"
             android:layout_marginBottom="10dp"
             android:text="@string/gerar_imagem" />
@@ -32,7 +32,8 @@
             android:layout_gravity="center"
             android:onClick="download"
             android:background="#3ad622"
-            android:text="@string/baixar_imagem" />
+            android:text="@string/baixar_imagem"
+            />
 
     </LinearLayout>
 </ScrollView>

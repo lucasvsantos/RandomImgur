@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgBaixada;
     ProgressDialog progressDialog;
     Bitmap imagem;
-
+    Button button;
     String charAll = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     @Override
@@ -46,11 +47,18 @@ public class MainActivity extends AppCompatActivity {
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, 10);
         }
-
         imgBaixada = findViewById(R.id.imgBaixada);
+        button = findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generateImage();
+            }
+        });
     }
 
-    public void generateImage(View view) {
+    public void generateImage(){
         DownloadAsyncTask downloadAsyncTask = new DownloadAsyncTask();
 
         int r;
@@ -69,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         FileOutputStream foStream;
         try {
             foStream = context.openFileOutput(imageName, Context.MODE_PRIVATE);
-//            foStream = new FileOutputStream(file);
             b.compress(Bitmap.CompressFormat.PNG, 100, foStream);
 
             foStream.close();
@@ -89,10 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(
-                    MainActivity.this,
-                    "Aguarde...",
-                    "Gerando sua imagem");
+            if(progressDialog == null || !progressDialog.isShowing()) {
+                progressDialog = ProgressDialog.show(
+                        MainActivity.this,
+                        "Aguarde...",
+                        "Gerando sua imagem");
+            }
         }
 
         @Override
@@ -111,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -120,10 +128,14 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(bitmap);
 
             if (bitmap != null) {
-                imgBaixada.setImageBitmap(bitmap);
+                if (bitmap.getWidth() == 161 && bitmap.getHeight() == 81){
+                    generateImage();
+                } else {
+                    imgBaixada.setImageBitmap(bitmap);
+                    progressDialog.dismiss();
+                }
             }
-
-            progressDialog.dismiss();
         }
+
     }
 }
